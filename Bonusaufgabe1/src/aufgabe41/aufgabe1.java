@@ -1,4 +1,4 @@
-package Bonus1;
+package aufgabe41;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
