@@ -63,4 +63,18 @@ public class aufgabe1 {
             System.out.println("Fehler beim Verbinden: " + e.getMessage());
         }
     }
+
+    public static Connection getConnection() throws SQLException {
+        String host = "localhost";
+        String port = "5433";
+        String database = "db01";
+        String username = "KAKAROT29";
+        String password = "EndlichDBS2";
+
+        // Verbindungs-URL erstellen
+        String url = String.format("jdbc:postgresql://%s:%s/%s", host, port, database);
+        
+        return DriverManager.getConnection(url, username, password);
+    }
+
 }

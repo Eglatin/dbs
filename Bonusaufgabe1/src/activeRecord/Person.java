@@ -8,21 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import aufgabe41.aufgabe1;
 
-public class Movie {
+public class Person {
 
     private Long id;
-    private String title;
-    private int year;
-    private String type;
+    private String name;
+    private String sex;
 
     // Getter and Setter
     public Long getId() { return id; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public int getYear() { return year; }
-    public void setYear(int year) { this.year = year; }
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getSex() { return sex; }
+    public void setSex(String sex) { this.sex = sex; }
 
     // Insert method
     public void insert() throws SQLException {
@@ -30,11 +27,10 @@ public class Movie {
             throw new IllegalStateException("Object has already been inserted");
         }
         try (Connection conn = aufgabe1.getConnection()) {
-            String sqlInsert = "INSERT INTO Movie (Title, Year, Type) VALUES (?, ?, ?)";
+            String sqlInsert = "INSERT INTO Person (Name, Sex) VALUES (?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sqlInsert, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, title);
-                stmt.setInt(2, year);
-                stmt.setString(3, type);
+                stmt.setString(1, name);
+                stmt.setString(2, sex);
                 stmt.executeUpdate();
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -51,12 +47,11 @@ public class Movie {
             throw new IllegalStateException("Object has not been inserted");
         }
         try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "UPDATE Movie SET Title = ?, Year = ?, Type = ? WHERE MovieID = ?";
+            String sql = "UPDATE Person SET Name = ?, Sex = ? WHERE PersonID = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, title);
-                stmt.setInt(2, year);
-                stmt.setString(3, type);
-                stmt.setLong(4, id);
+                stmt.setString(1, name);
+                stmt.setString(2, sex);
+                stmt.setLong(3, id);
                 stmt.executeUpdate();
             }
         }
@@ -68,7 +63,7 @@ public class Movie {
             throw new IllegalStateException("Object has not been inserted");
         }
         try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "DELETE FROM Movie WHERE MovieID = ?";
+            String sql = "DELETE FROM Person WHERE PersonID = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setLong(1, id);
                 stmt.executeUpdate();
@@ -77,19 +72,18 @@ public class Movie {
     }
 
     // FindById method
-    public static Movie findById(long id) throws SQLException {
+    public static Person findById(long id) throws SQLException {
         try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT Title, Year, Type FROM Movie WHERE MovieID = ?";
+            String sql = "SELECT Name, Sex FROM Person WHERE PersonID = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setLong(1, id);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        Movie movie = new Movie();
-                        movie.id = id;
-                        movie.setTitle(rs.getString("Title"));
-                        movie.setYear(rs.getInt("Year"));
-                        movie.setType(rs.getString("Type"));
-                        return movie;
+                        Person person = new Person();
+                        person.id = id;
+                        person.setName(rs.getString("Name"));
+                        person.setSex(rs.getString("Sex"));
+                        return person;
                     }
                 }
             }
@@ -98,22 +92,21 @@ public class Movie {
     }
 
     // FindAll method
-    public static List<Movie> findAll() throws SQLException {
-        List<Movie> movieList = new ArrayList<>();
+    public static List<Person> findAll() throws SQLException {
+        List<Person> personList = new ArrayList<>();
         try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT MovieID, Title, Year, Type FROM Movie";
+            String sql = "SELECT PersonID, Name, Sex FROM Person";
             try (PreparedStatement stmt = conn.prepareStatement(sql);
                  ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Movie movie = new Movie();
-                    movie.id = rs.getLong("MovieID");
-                    movie.setTitle(rs.getString("Title"));
-                    movie.setYear(rs.getInt("Year"));
-                    movie.setType(rs.getString("Type"));
-                    movieList.add(movie);
+                    Person person = new Person();
+                    person.id = rs.getLong("PersonID");
+                    person.setName(rs.getString("Name"));
+                    person.setSex(rs.getString("Sex"));
+                    personList.add(person);
                 }
             }
         }
-        return movieList;
+        return personList;
     }
 }
