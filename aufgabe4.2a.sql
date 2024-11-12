@@ -8,7 +8,7 @@ CREATE TABLE Genre (
 
 -- Tabelle für Person
 CREATE TABLE Person (
-    PersonID BIGINT PRIMARY KEY,
+    PersonID BIGSERIAL PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
     Sex CHAR(1),
     CONSTRAINT unique_name UNIQUE (Name)
@@ -33,7 +33,7 @@ CREATE TABLE MovieGenre (
 
 -- Tabelle für MovieCharacter
 CREATE TABLE MovieCharacter (
-    MovCharID BIGINT PRIMARY KEY,
+    MovCharID BIGSERIAL PRIMARY KEY,
     Character VARCHAR(255) NOT NULL,
     Alias VARCHAR(255),
     Position INT,
