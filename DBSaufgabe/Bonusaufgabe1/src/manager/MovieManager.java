@@ -13,57 +13,57 @@ import dtos.MovieDTO;
 import aufgabe41.aufgabe1;
 
 /**
- * Die Klasse `MovieManager` verwaltet die Datenbankzugriffe und -operationen 
- * für Film-Entitäten. Diese Klasse stellt Methoden zur Verfügung, um Filme zu suchen,
- * hinzuzufügen, zu aktualisieren und zu löschen.
+ * MovieManager verwaltet die Datenbankzugriffe und -operationen 
+ * für Film-Entitäten. stellt Methoden zur Verfügung, um Filme zu suchen,
+ * hinzuzufügen, aktualisieren und löschen
  */
 public class MovieManager {
 
     /**
-     * Sucht alle Filme, die den Suchstring im Titel enthalten. Gibt alle Filme zurück, wenn der Suchstring leer ist.
-     * Der Vergleich erfolgt ohne Berücksichtigung der Groß-/Kleinschreibung.
+     * Sucht alle Filme, die den Suchstring im Titel enthalten. Gibt alle Filme zurück, wenn der Suchstring leer ist
+     * Vergleich ohne Berücksichtigung groß und kleinschreibung
      * @param search Suchstring für den Filmtitel.
-     * @return Eine Liste von `MovieDTO`-Objekten, die die passenden Filme repräsentieren.
-     * @throws Exception Bei einem Datenbankfehler.
+     * @return Eine Liste von MovieDTO-Objekten, die die passenden Filme repräsentieren
+     * @throws Exception Bei einem Datenbankfehler
      */
     public List<MovieDTO> getMovieList(String search) throws Exception {
         List<MovieDTO> movies = new ArrayList<>();
         boolean ok = false; // Transaktionsstatus, um Commit oder Rollback zu steuern
 
         try {
-            // Sucht Filme basierend auf dem Suchstring und konvertiert sie in `MovieDTO`-Objekte
+            // sucht Filme basierend auf Suchstring und konvertiert sie in MovieDTO-Objekte
             for (Movie movie : Movie.findByTitle(search)) {
                 movies.add(movie.toDTO());
             }
 
-            // Bestätigt die Transaktion durch Commit
+            //Bestätigt die Transaktion durch Commit
             aufgabe1.getConnection().commit();
             ok = true; // Setzt den Transaktionsstatus auf erfolgreich
 
         } finally {
-            // Falls ein Fehler aufgetreten ist, wird die Transaktion durch Rollback abgebrochen
+            // Falls Fehler, wird Trasnaktion durch Rollback abgebrochen
             if (!ok) {
                 aufgabe1.getConnection().rollback();
             }
         }
 
-        return movies; // Gibt die Liste der gefundenen Filme zurück
+        return movies; //Gibt Liste der gefundenen Filme zurück
     }
 
     /**
-     * Fügt einen neuen Film in die Datenbank ein oder aktualisiert einen vorhandenen Film basierend auf den übergebenen Daten.
-     * Aktualisiert auch die Zuordnungen zu Genres und Charakteren.
-     * @param movieDTO Das Filmobjekt mit den neuen Daten, einschließlich Genres und Charaktere.
-     * @throws Exception Bei einem Datenbankfehler.
+     *Fügt neuen Film in Datenbank ein oder aktualisiert einen vorhandenen Film basierend auf den übergebenen Daten
+     * Aktualisiert auch die Zuordnungen zu Genres und Charakteren
+    *@param movieDTO Filmobjekt mit neuen Daten, einschließlich Genres und Charaktere
+     * @throws Exception Bei datenbankfehler
      */
     public void insertUpdateMovie(MovieDTO movieDTO) throws Exception {
         boolean ok = false;
         Movie movie;
 
         try {
-            // Unterscheidet zwischen neuer und vorhandener Filmeinfügung/Aktualisierung
+            // unterscheidet zwischen neuer und vorhandener Filmeinfügung/ aktualisierung
             if (movieDTO.getId() == null) {
-                // Neues `Movie`-Objekt, falls die ID null ist (neuer Film)
+                // Neues Movie-Objekt, falls  ID null ist (neuer Film)
                 movie = new Movie();
                 movie.setTitle(movieDTO.getTitle());
                 movie.setType(movieDTO.getType().charAt(0));
@@ -71,12 +71,12 @@ public class MovieManager {
                 movie.insert(); // Einfügen eines neuen Films
 
             } else {
-                // Sucht nach einem vorhandenen Film anhand der ID
+                //Sucht nach vorhandenen Film anhand id
                 movie = Movie.findById(movieDTO.getId());
                 if (movie == null) {
                     throw new IllegalArgumentException("Film für Update nicht gefunden");
                 }
-                // Aktualisieren eines bestehenden Films
+                // aktualisieren  bestehenden Films
                 movie.setTitle(movieDTO.getTitle());
                 movie.setType(movieDTO.getType().charAt(0));
                 movie.setYear(movieDTO.getYear());
@@ -90,7 +90,7 @@ public class MovieManager {
 
             // Fügt neue Genre-Zuordnungen hinzu
             for (String genre : movieDTO.getGenres()) {
-                // Sucht das Genre in der Datenbank anhand des Namens
+                //sucht das Genre in der Datenbank anhand des Namens
                 List<Genre> foundGenres = Genre.findByGenre(genre);
                 if (foundGenres.isEmpty()) {
                     throw new IllegalArgumentException("Genre nicht gefunden: " + genre);
@@ -110,29 +110,29 @@ public class MovieManager {
             // Fügt neue Charaktere hinzu
             for (int i = 0; i < movieDTO.getCharacters().size(); i++) {
                 CharacterDTO characterDTO = movieDTO.getCharacters().get(i);
-                // Sucht die Person (Darsteller) in der Datenbank anhand des Namens
+                //sucht Person (Darsteller) in der Datenbank anhand des Namens
                 List<Person> foundPersons = Person.findByName(characterDTO.getPlayer());
 
                 if (foundPersons.isEmpty()) {
                     throw new IllegalArgumentException("Person nicht gefunden: " + characterDTO.getPlayer());
                 }
 
-                // Erstellt und fügt ein neues `Character`-Objekt für den Film hinzu
+                //erstellt und fügt ein neues Character-Objekt für den Film hinzu
                 Character movieCharacter = new Character();
                 movieCharacter.setCharacter(characterDTO.getCharacter());
                 movieCharacter.setAlias(characterDTO.getAlias());
-                movieCharacter.setPosition(i + 1); // Position entsprechend der Reihenfolge setzen
+                movieCharacter.setPosition(i + 1); // Position entsprechend reihenfolge setzen
                 movieCharacter.setMovieID(movie.getId());
                 movieCharacter.setPersonID(foundPersons.get(0).getId());
                 movieCharacter.insert();
             }
 
-            // Bestätigt die Transaktion durch Commit
+            //bestätigt transaktion durch Commit
             aufgabe1.getConnection().commit();
             ok = true;
 
         } finally {
-            // Falls ein Fehler aufgetreten ist, wird die Transaktion durch Rollback abgebrochen
+            // FallsFehler aufgetreten, wird die Transaktion durch Rollback abgebrochen
             if (!ok) {
                 aufgabe1.getConnection().rollback();
             }
@@ -140,25 +140,25 @@ public class MovieManager {
     }
 
     /**
-     * Löscht einen Film und alle zugehörigen Objekte (Genres und Charaktere) aus der Datenbank.
-     * @param movieId Die ID des Films, der gelöscht werden soll.
-     * @throws Exception Bei einem Datenbankfehler.
+     * Löscht einen Film und alle zugehörigen Objekte (Genres und Charaktere) aus der Datenbank
+     * @param movieId Die ID des Films, der gelöscht werden soll
+     * @throws Exception Bei Datenbankfehler
      */
     public void deleteMovie(long movieId) throws Exception {
         boolean ok = false;
 
         try {
-            // Löscht alle zugehörigen `Character`-Einträge für den Film
+            // Löscht alle zugehörigen Character-Einträge für den Film
             for (Character movieCharacter : Character.findByMovieID(movieId)) {
                 movieCharacter.delete();
             }
 
-            // Löscht alle zugehörigen `Movie_Genre`-Einträge für den Film
+            // Löscht alle zugehörigen Movie_GenreEinträge für den Film
             for (Movie_Genre movieGenre : Movie_Genre.findByMovieID(movieId)) {
                 movieGenre.delete();
             }
 
-            // Löscht den Film selbst
+            // Löscht Film selbst
             Movie movie = Movie.findById(movieId);
             if (movie != null) {
                 movie.delete();
@@ -169,7 +169,7 @@ public class MovieManager {
             ok = true;
 
         } finally {
-            // Falls ein Fehler aufgetreten ist, wird die Transaktion durch Rollback abgebrochen
+            // Falls fehler aufgetreten ist, wird die Transaktion durch Rollback abgebrochen
             if (!ok) {
                 aufgabe1.getConnection().rollback();
             }
@@ -179,7 +179,7 @@ public class MovieManager {
     /**
      * Holt die Daten eines Films aus der Datenbank und gibt diese als `MovieDTO`-Objekt zurück.
      * @param movieId Die ID des Films, dessen Daten abgerufen werden sollen.
-     * @return `MovieDTO` mit den Daten des Films, einschließlich Genres und Charaktere.
+     * @return MovieDTO mit den Daten des Films, einschließlich Genres und Charaktere.
      * @throws Exception Bei einem Datenbankfehler.
      */
     public MovieDTO getMovie(long movieId) throws Exception {
