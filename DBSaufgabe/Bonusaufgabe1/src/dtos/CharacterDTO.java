@@ -1,19 +1,19 @@
 package dtos;
 
 /**
- * Die Klasse `CharacterDTO` dient als Data Transfer Object (DTO) für eine Filmfigur.
- * Diese Klasse wird verwendet, um die Daten einer Figur zwischen der GUI und der Geschäftslogik zu übertragen.
- * Sie enthält alle relevanten Informationen zur Figur, einschließlich ihres Namens, ihres Alias und des Darstellers.
+ *CharacterDTO dient als Data Transfer Object (DTO) für eine Filmfigur
+ * klasse wird verwendet, um daten einer Figur zwischen gui und der Geschäftslgik zu übertragen
+ *enthält alle relevanten Informationen zur Figur, einschließlich ihres Namens, ihres Alias und des Darstellers.
  */
 public class CharacterDTO {
     
-    // Der Name der Figur, z.B. "Luke Skywalker"
+    //name der Figur z.B. Luke Skywalker
     private String character;
     
-    // Der Alias oder Spitzname der Figur, z.B. "Jedi-Ritter"
+    //alias o. Spitzname der Figur
     private String alias;
     
-    // Der Name des Darstellers, der die Figur spielt, z.B. "Mark Hamill"
+    //name des Darstellers, der die Figur spielt 
     private String player;
 
     /**
@@ -76,18 +76,18 @@ public class CharacterDTO {
     }
 
     /**
-     * Setzt den Namen des Darstellers, der die Figur spielt.
-     * @param player Der Name des Darstellers als String.
+     *setzt den Namen des Darstellers, der die Figur spielt
+     * @param player Der Name des Darstellers als String
      */
     public void setPlayer(String player) {
         this.player = player;
     }
 
     /**
-     * Gibt eine textuelle Darstellung der Figur zurück.
-     * Diese Methode wird typischerweise verwendet, um die Informationen der Figur 
-     * in einer benutzerfreundlichen Form anzuzeigen.
-     * @return Eine Zeichenkette, die den Namen, Alias und Darsteller der Figur enthält.
+     *gibt eine textuelle Darstellung der Figur zurück
+     *diese Methode wird typischerweise verwendet, um die Informationen der Figur 
+     * in einer benutzerfreundlichen Form anzuzeigen
+     * @return Eine Zeichenkette, die den Namen, Alias und Darsteller der Figur enthält
      */
     @Override
     public String toString() {
