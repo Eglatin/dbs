@@ -12,29 +12,29 @@ import dtos.MovieDTO;
 import aufgabe41.aufgabe1;
 
 /**
- * Die Klasse `Movie` repräsentiert einen Film in der Datenbank.
- * Jeder Film hat eine eindeutige ID, einen Titel, ein Erscheinungsjahr und einen Typ.
- * Die Klasse bietet Methoden zum Einfügen, Aktualisieren, Löschen und
- * Abrufen von Filmen aus der Datenbank.
+ *Movie repräsentiert einen Film in der Datenbank
+ * Jeder Film hat eine eindeutige ID, einen Titel, ein Erscheinungsjahr und einen Typ
+ * klasse bietet Methoden zum Einfügen, Aktualisieren, Löschen und
+ * Abrufen von Filmen aus der Datenbank
  */
 public class Movie {
 
     // Eindeutige ID des Films, die beim Einfügen in die Datenbank gesetzt wird.
     private Long id;
 
-    // Titel des Films, dieser Wert darf nicht null sein.
+    //Titel des Films, dieser Wert darf nicht null sein.
     private String title;
     
-    // Erscheinungsjahr des Films, z.B. 2022.
+    //Erscheinungsjahr des Films
     private int year;
     
-    // Typ des Films, z.B. 'F' für Film, 'T' für TV-Serie, etc.
+    //Typ des Films, z.B. 'F' für Film
     private char type;
     
     // Getter- und Setter-Methoden für die Attribute der Klasse
     
     /**
-     * Gibt die ID des Films zurück.
+     * Gibt die ID des Films zurück
      * @return ID des Films als Long
      */
     public Long getId() {
@@ -42,7 +42,7 @@ public class Movie {
     }
 
     /**
-     * Gibt den Titel des Films zurück.
+     * Gibt den Titel des Films zurück
      * @return Titel des Films als String
      */
     public String getTitle() {
@@ -50,15 +50,15 @@ public class Movie {
     }
 
     /**
-     * Setzt den Titel des Films.
-     * @param title Der Titel des Films als String, darf nicht null sein.
+     * Setzt den Titel des Films
+     * @param title Der Titel des Films als String, darf nicht null sein
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * Gibt das Erscheinungsjahr des Films zurück.
+     *gibt das Erscheinungsjahr des Films zurück.
      * @return Erscheinungsjahr des Films als int
      */
     public int getYear() {
@@ -128,8 +128,8 @@ public class Movie {
     }
 
     /**
-     * Aktualisiert die vorhandenen Daten eines Films in der Datenbank.
-     * Der Film muss bereits in die Datenbank eingefügt worden sein.
+     *Aktualisiert die vorhandenen Daten eines Films in der Datenbank.
+     * der Film muss bereits in die Datenbank eingefügt worden sein.
      * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
      * @throws IllegalStateException Falls der Film noch keine ID besitzt.
      */
@@ -139,10 +139,10 @@ public class Movie {
             throw new IllegalStateException("Objekt wurde noch nicht eingefügt");
         }
         
-        // Verbindung zur Datenbank wird hergestellt
+        //verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
         
-        // SQL-Statement zum Aktualisieren der Filmdaten basierend auf der ID
+        //SQL-Statement zum Aktualisieren der Filmdaten basierend auf der ID
         String inst = "UPDATE Movie SET Title = ?, Year = ?, Type = ? WHERE MovieID = ?";
                 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
@@ -155,7 +155,7 @@ public class Movie {
             // Setzt die ID für die vierte Platzhalter-Variable (? → id)
             stmt.setLong(4, id);
             
-            // Führt das SQL-Update-Statement aus, um die Filmdaten zu aktualisieren
+            //Führt das SQL-Update-Statement aus, um die Filmdaten zu aktualisieren
             stmt.executeUpdate();
         }
     }
@@ -172,14 +172,14 @@ public class Movie {
             throw new IllegalStateException("Objekt wurde noch nicht eingefügt");
         }
         
-        // Verbindung zur Datenbank wird hergestellt
+        //Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
         
-        // SQL-Statement zum Löschen des Films basierend auf der ID
+        //SQL-Statement zum Löschen des Films basierend auf der ID
         String inst = "DELETE FROM Movie WHERE MovieID = ?";
                 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
-            // Setzt die ID des Films als Parameter für das Delete-Statement (? → id)
+            // setzt die ID des Films als Parameter für das Delete-Statement (? → id)
             stmt.setLong(1, id);
             
             // Führt das SQL-Delete-Statement aus, um den Film zu löschen
