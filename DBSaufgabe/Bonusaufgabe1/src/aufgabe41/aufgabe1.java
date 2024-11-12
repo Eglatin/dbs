@@ -2,79 +2,85 @@ package aufgabe41;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.SwingUtilities;
+import gui.SearchMovieDialog;
+import gui.SearchMovieDialogCallback;
 
 public class aufgabe1 {
-    public static void main(String[] args) {
-        // Verbindungsparameter
-        String host = "localhost";
-        String port = "5433";
-        String database = "db01";
-        String username = "KAKAROT29";
-        String password = "EndlichDBS2";
-        
-        // Verbindungs-URL erstellen
-        String url = String.format("jdbc:postgresql://%s:%s/%s", host, port, database);
 
-        // ID-Parameter verarbeiten
-        Integer movieId = null;
-        if (args.length > 0) {
-            try {
-                movieId = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                System.out.println("Ungültige Film-ID. Bitte geben Sie eine gültige Zahl ein.");
-                return;
-            }
-        }
+    // Statische Verbindung zur Datenbank
+    private static Connection conn;
 
-        // Verbindung zur PostgreSQL-Datenbank herstellen
-        try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            if (conn != null) {
-                System.out.println("Verbindung erfolgreich!");
-
-                // SQL-Abfrage vorbereiten
-                String sql;
-                if (movieId != null) {
-                    sql = "SELECT title FROM moviedb2.movie WHERE id = ?";
-                } else {
-                    sql = "SELECT title FROM moviedb2.movie WHERE id BETWEEN 600000 AND 600100";
-                }
-
-                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    if (movieId != null) {
-                        pstmt.setInt(1, movieId);
-                    }
-
-                    // Abfrage ausführen und Ergebnisse verarbeiten
-                    ResultSet rs = pstmt.executeQuery();
-                    while (rs.next()) {
-                        String title = rs.getString("title"); // Hier wird die Spalte "title" abgerufen
-                        System.out.printf("Titel: %s%n", title);
-                    }
-                } catch (SQLException e) {
-                    System.out.println("Fehler beim Ausführen der Abfrage: " + e.getMessage());
-                }
-            } else {
-                System.out.println("Verbindung fehlgeschlagen!");
-            }
-        } catch (SQLException e) {
-            System.out.println("Fehler beim Verbinden: " + e.getMessage());
+    static {
+        try {
+            // Verbindungsdetails festlegen
+            String host = "localhost";
+            String port = "5433";
+            String database = "db01";
+            String username = "KAKAROT29";
+            String password = "EndlichDBS2";
+            
+            // Verbindungs-URL erstellen
+            String url = String.format("jdbc:postgresql://%s:%s/%s", host, port, database);
+            
+            // Verbindung zur Datenbank herstellen
+            conn = DriverManager.getConnection(url, username, password);
+            conn.setAutoCommit(false);
+            System.out.println("Verbindung erfolgreich hergestellt...");
+        } catch (Exception e) {
+            System.err.println("Fehler beim Verbinden zur Datenbank");
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
-    public static Connection getConnection() throws SQLException {
-        String host = "localhost";
-        String port = "5433";
-        String database = "db01";
-        String username = "KAKAROT29";
-        String password = "EndlichDBS2";
+    // Zugriffsmethode für die Verbindung
+    public static Connection getConnection() {
+        return conn;
+    }
 
-        // Verbindungs-URL erstellen
-        String url = String.format("jdbc:postgresql://%s:%s/%s", host, port, database);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new aufgabe1().run();
+            }
+        });
+
+        // Beispiel: Abfrage und Ausgabe der Genre-Tabelle
+        try {
+            queryGenreTable();
+        } catch (Exception e) {
+            System.err.println("Fehler bei der Tabellenabfrage: " + e.getMessage());
+        }
+    }
+
+    // Methode zur Ausf端hrung der Anwendung und Anzeige der GUI
+    public void run() {
+        SearchMovieDialogCallback callback = new SearchMovieDialogCallback();
+        SearchMovieDialog sd = new SearchMovieDialog(callback);
+        sd.setVisible(true);
+    }
+
+    // Beispielmethode zum Abfragen und Ausgeben der Movie-Tabelle
+    public static void queryGenreTable() throws Exception {
+        Statement stmt = conn.createStatement();
+        String sql = "SELECT * FROM Movie";  // Beispiel: Abfrage der Movie-Tabelle
+        ResultSet rs = stmt.executeQuery(sql);
         
-        return DriverManager.getConnection(url, username, password);
+        // Abfrageergebnisse ausgeben
+        while (rs.next()) {
+            System.out.println("Movie ID: " + rs.getInt("movieid"));  // Richtiger Spaltenname ist "movieid"
+            System.out.println("Title: " + rs.getString("title"));
+            System.out.println("Year: " + rs.getInt("year"));
+            System.out.println("Type: " + rs.getString("type"));
+            System.out.println("-------------------------");
+        }
+        
+        rs.close();
+        stmt.close(); 
     }
 
 }

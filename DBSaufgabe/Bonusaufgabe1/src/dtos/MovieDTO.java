@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Data Transfer Object (DTO) für Objekte der Klasse Movie.
- * Enthält alle erforderlichen Informationen für die Kommunikation GUI <-> Geschäftslogik,
+ * Data Transfer Object (DTO) für die Klasse Movie.
+ * Dieses Objekt wird verwendet, um alle notwendigen Film-Informationen zwischen GUI und Geschäftslogik zu übertragen,
  * einschließlich aller zugeordneten Genres und Charaktere.
- * Falls es sich um einen neuen Film handelt, ist die ID null.
+ * Die ID ist null, falls es sich um einen neuen Film handelt.
  */
 public class MovieDTO {
 
-    private Long id = null;
-    private String title = "";
-    private String type = "C";
-    private int year = 0;
-    private Set<String> genres = new HashSet<>();
-    private List<CharacterDTO> characters = new ArrayList<>();
+    private Long id = null; // ID des Films (null für neue Filme)
+    private String title = ""; // Titel des Films
+    private String type = "C"; // Standardtyp des Films (z.B. "C" für Standardinitialisierung)
+    private int year = 0; // Erscheinungsjahr des Films
+    private Set<String> genres = new HashSet<>(); // Set zur Speicherung der Genres, um doppelte Werte zu vermeiden
+    private List<CharacterDTO> characters = new ArrayList<>(); // Liste zur geordneten Speicherung der Charaktere
 
     // Getter und Setter für alle Felder
     public Long getId() {
@@ -69,17 +69,24 @@ public class MovieDTO {
         this.characters = characters;
     }
 
+    // Methode zum Hinzufügen eines Genres, falls es noch nicht vorhanden ist
     public void addGenre(String genre) {
-        genres.add(genre);
+        genres.add(genre); // Fügt ein Genre hinzu, vermeidet Duplikate durch Verwendung des Sets
     }
 
+    // Methode zum Hinzufügen eines Charakters zur Liste
     public void addCharacter(CharacterDTO characterDTO) {
-        characters.add(characterDTO);
+        characters.add(characterDTO); // Fügt einen Charakter zur geordneten Liste hinzu
     }
 
+    // Überschreibt die toString-Methode, um die Film-Informationen als Zeichenkette darzustellen
     @Override
     public String toString() {
-        return "MovieDTO [id=" + id + ", title=" + title + ", type=" + type + ", year=" + year 
-                + ", genres=" + genres + ", characters=" + characters + "]";
+        return "MovieDTO [id=" + id + ", title=" + title + ", type=" + type 
+               + ", year=" + year + ", genres=" + genres + ", characters=" + characters + "]";
     }
 }
+
+
+
+

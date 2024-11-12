@@ -22,8 +22,6 @@ CREATE TABLE Movie (
     type CHAR(1)
 );
 
-SELECT * FROM movie;
-
 -- Zwischentabelle für die N:M-Beziehung zwischen Movie und Genre
 CREATE TABLE MovieGenre (
     MovieID BIGINT,
@@ -119,3 +117,6 @@ DROP TABLE IF EXISTS Person CASCADE;
 - Wenn ein Eintrag in Movie oder Person gelöscht wird, sollten alle zugehörigen Einträge
   in MovieGenre und MovieCharacter automatisch gelöscht werden, um verwaiste Einträge zu vermeiden
 **/
+
+//aufrufen test
+SELECT * FROM movie;

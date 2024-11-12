@@ -6,106 +6,208 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import aufgabe41.aufgabe1;
 
+/**
+ * Die Klasse Person repräsentiert eine Person mit einem Namen in der Datenbank.
+ * Sie enthält Methoden zum Einfügen, Aktualisieren, Löschen und Abrufen von Personendaten.
+ */
 public class Person {
+
     private Long id;
+
     private String name;
-
-    public Person() {}
-
-    public Person(String name) {
-        this.name = name;
-    }
-
-    // Getter und Setter für alle Attribute
+    
+    private char sex;
+        
+    //Getter and Setter
+    
     public Long getId() {
+        
         return id;
     }
 
     public String getName() {
+        
         return name;
     }
 
     public void setName(String name) {
+    
+        
         this.name = name;
     }
 
-    // Insert-Methode
+    public int getSex() {
+        
+        return sex;
+    }
+
+    public void setSex(char sex) {
+        
+        this.sex = sex;
+    }
+
+    // Insert, Update and Delete Methods
+    
     public void insert() throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "INSERT INTO Person (name) VALUES (?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, name);
-                stmt.executeUpdate();
-                try (ResultSet rs = stmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        this.id = rs.getLong(1);
-                    }
+        
+        if (id != null) {
+            
+            throw new IllegalStateException("Object has already been inserted");
+        }
+        
+        Connection conn = aufgabe1.getConnection();
+        
+        String inst1 = "INSERT INTO Person(Name, Sex) VALUES(?, ?)";
+        
+        String inst2 = "SELECT last_insert_rowid() AS PersonID";
+                
+        try (PreparedStatement stmt1 = conn.prepareStatement(inst1)) {
+            
+            stmt1.setString(1, name);
+            stmt1.setString(2, String.valueOf(sex));
+            
+            stmt1.executeUpdate();
+            
+            try (PreparedStatement stmt2 = conn.prepareStatement(inst2)){
+            
+                try (ResultSet rs = stmt2.executeQuery()) {
+                    
+                    rs.next();
+                    
+                    id = rs.getLong("PersonID");
                 }
             }
         }
     }
-
-    // Update-Methode
+    
     public void update() throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "UPDATE Person SET name = ? WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, name);
-                stmt.setLong(2, id);
-                stmt.executeUpdate();
-            }
+        
+        if (id == null) {
+            
+            throw new IllegalStateException("Object has not been inserted");
+        }
+        
+        Connection conn = aufgabe1.getConnection();
+        
+        String inst = "UPDATE Person SET Name = ?, Sex = ? WHERE PersonID = ?";
+                
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setString(1, name);
+            stmt.setString(2, String.valueOf(sex));
+            stmt.setLong(3, id);
+            
+            stmt.executeUpdate();
         }
     }
-
-    // Delete-Methode
+    
     public void delete() throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "DELETE FROM Person WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setLong(1, id);
-                stmt.executeUpdate();
-            }
+        
+        if (id == null) {
+            
+            throw new IllegalStateException("Object has not been inserted");
+        }
+        
+        Connection conn = aufgabe1.getConnection();
+        
+        String inst = "DELETE FROM Person WHERE PersonID = ? ";
+                
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setLong(1, id);
+            
+            stmt.executeUpdate();
         }
     }
+    
+    //Static Methods
+    
+    public static List<Person> findAll() throws SQLException {
+        
+        Connection conn = aufgabe1.getConnection();
 
-    // FindById-Methode
+        List<Person> personList = new ArrayList<>();
+        
+        String inst = "SELECT PersonID, Name, Sex FROM Person";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                
+                Person person = new Person();
+
+                person.id = rs.getLong("PersonID");
+                person.setName(rs.getString("Name"));
+                person.setSex(rs.getString("Sex").charAt(0));
+                
+                personList.add(person);
+            }
+        }
+        
+        return personList;
+    }
+    
     public static Person findById(long id) throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT * FROM Person WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setLong(1, id);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        Person person = new Person();
-                        person.id = rs.getLong("id");
-                        person.name = rs.getString("name");
-                        return person;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+        
+        Connection conn = aufgabe1.getConnection();
 
-    // FindByName-Methode
-    public static List<Person> findByName(String name) throws SQLException {
-        List<Person> persons = new ArrayList<>();
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT * FROM Person WHERE LOWER(name) LIKE LOWER(?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, "%" + name + "%");
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        Person person = new Person();
-                        person.id = rs.getLong("id");
-                        person.name = rs.getString("name");
-                        persons.add(person);
-                    }
+        Person person = new Person();
+        
+        person.id = id;
+        
+        String inst = "SELECT Name, Sex FROM Person WHERE PersonID = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setLong(1, id);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                
+                if (!rs.next()) {
+                    
+                    throw new IllegalArgumentException("Object with ID " + id + " does not exist");
+                }
+                
+                person.setName(rs.getString("Name"));
+                person.setSex(rs.getString("Sex").charAt(0));
+            }
+        }
+        
+        return person;
+    }
+     
+    public static List<Person> findByName(String title) throws SQLException {
+        
+        Connection conn = aufgabe1.getConnection();
+
+        List<Person> people = new ArrayList<>();
+                
+        String inst = "SELECT PersonID, Name, Sex FROM Person WHERE LOWER(Name) LIKE ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setString(1, "%" + title.toLowerCase() + "%");
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                
+                while (rs.next()) {
+                    
+                    Person person = new Person();
+                    
+                    person.id = rs.getLong("PersonID");
+                    person.setName(rs.getString("Name"));
+                    person.setSex(rs.getString("Sex").charAt(0));
+                    
+                    people.add(person);
                 }
             }
         }
-        return persons;
+        
+        return people;
     }
 }

@@ -6,81 +6,187 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import aufgabe41.aufgabe1;
 
 public class Genre {
-    private Long id;
-    private String name;
 
-    public Genre() {}
+        private Long id;
 
-    public Genre(String name) {
-        this.name = name;
-    }
+        private String genre;
 
-    // Getter und Setter für alle Attribute
-    public Long getId() {
-        return id;
-    }
+    	//Getter and Setter
 
-    public String getName() {
-        return name;
-    }
+        public Long getID() { 
 
-    public void setName(String name) {
-        this.name = name;
-    }
+            return id;
+        }
 
-    // Insert-Methode
-    public void insert() throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "INSERT INTO Genre (name) VALUES (?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, name);
+        public String getGenre() {
+
+            return genre;
+        }
+
+        public void setGenre(String genre) {
+
+            this.genre = genre;
+        }
+
+    	// Insert, Update and Delete Methods
+
+        public void insert() throws SQLException {
+
+            if (id != null) {
+
+                throw new IllegalStateException("Object has already been inserted");
+            }
+
+            Connection conn = aufgabe1.getConnection();
+
+            String inst1 = "INSERT INTO Genre(Genre) VALUES(?)";
+
+            String inst2 = "SELECT last_insert_rowid() AS GenreID";
+
+            try (PreparedStatement stmt1 = conn.prepareStatement(inst1)) {
+
+                stmt1.setString(1, genre);
+
+                stmt1.executeUpdate();
+
+                try (PreparedStatement stmt2 = conn.prepareStatement(inst2)){
+
+                    try (ResultSet rs = stmt2.executeQuery()) {
+
+                        rs.next();
+
+                        id = rs.getLong("GenreID");
+                    }
+                }
+            }
+        }
+
+        public void update() throws SQLException {
+
+            if (id == null) {
+
+                throw new IllegalStateException("Object has not been inserted");
+            }
+
+            Connection conn = aufgabe1.getConnection();
+
+            String inst = "UPDATE Genre SET Genre = ? WHERE GenreID = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+
+                stmt.setString(1, genre);
+                stmt.setLong(2, id);
+
                 stmt.executeUpdate();
-                try (ResultSet rs = stmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        this.id = rs.getLong(1);
-                    }
-                }
             }
         }
-    }
 
-    // FindAll-Methode
-    public static List<Genre> findAll() throws SQLException {
-        List<Genre> genres = new ArrayList<>();
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT * FROM Genre";
-            try (PreparedStatement stmt = conn.prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Genre genre = new Genre();
-                    genre.id = rs.getLong("id");
-                    genre.name = rs.getString("name");
-                    genres.add(genre);
-                }
+        public void delete() throws SQLException {
+
+            if (id == null) {
+
+                throw new IllegalStateException("Object has not been inserted");
+            }
+
+            Connection conn = aufgabe1.getConnection();
+
+            String inst = "DELETE FROM Genre WHERE GenreID = ? ";
+
+            try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+
+                stmt.setLong(1, id);
+
+                stmt.executeUpdate();
             }
         }
-        return genres;
-    }
+        
+        //Static Methods
+        
+        public static List<Genre> findAll() throws SQLException {
 
-    // FindByName-Methode
-    public static Genre findByName(String name) throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT * FROM Genre WHERE name = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, name);
+            Connection conn = aufgabe1.getConnection();
+
+            List<Genre> genreList = new ArrayList<>();
+
+            String inst = "SELECT GenreID, Genre FROM Genre";
+
+            try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+
                 try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
+
+                    while (rs.next()) {
+
                         Genre genre = new Genre();
-                        genre.id = rs.getLong("id");
-                        genre.name = rs.getString("name");
-                        return genre;
+
+                        genre.id = rs.getLong("GenreID");
+                        genre.setGenre(rs.getString("Genre"));
+                        
+                        genreList.add(genre);
                     }
                 }
             }
+
+            return genreList;
         }
-        return null;
+
+        public static Genre findById(long id) throws SQLException {
+
+            Connection conn = aufgabe1.getConnection();
+
+            Genre genre = new Genre();
+
+
+            String inst = "SELECT Genre FROM Genre WHERE GenreID = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+
+                stmt.setLong(1, id);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+
+                    if (!rs.next()) {
+
+                        throw new IllegalArgumentException("Object with ID " + id + " does not exist");
+                    }
+
+                    genre.genre = rs.getString("Genre");
+                    genre.id = id;
+                }
+            }
+
+            return genre;
+        }
+        
+    	public static List<Genre> findByGenre(String genre) throws SQLException {
+    		
+    		Connection conn = aufgabe1.getConnection();
+
+    		List<Genre> genreList = new ArrayList<>();
+    				
+    		String inst = "SELECT GenreID, Genre FROM Genre WHERE LOWER(Genre) LIKE ?";
+    		
+    		try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+    			
+    			stmt.setString(1, "%" + genre.toLowerCase() + "%");
+    			
+    			try (ResultSet rs = stmt.executeQuery()) {
+    				
+    				while (rs.next()) {
+    					
+    					Genre newGenre = new Genre();
+    					
+    					newGenre.id = rs.getLong("GenreID");
+    					newGenre.setGenre(rs.getString("Genre"));
+    					
+    					genreList.add(newGenre);
+    				}
+    			}
+    		}
+    		
+    		return genreList;
+    	}
     }
-}

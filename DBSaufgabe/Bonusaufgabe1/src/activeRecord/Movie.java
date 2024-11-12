@@ -6,134 +6,239 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+
+import dtos.MovieDTO;
 import aufgabe41.aufgabe1;
 
 public class Movie {
+
     private Long id;
+
     private String title;
-    private Integer year;
-    private String type;
-
-    public Movie() {}
-
-    public Movie(String title, Integer year, String type) {
-        this.title = title;
-        this.year = year;
-        this.type = type;
-    }
-
-    // Getter und Setter für alle Attribute
+    
+    private int year;
+    
+    private char type;
+    
+    //Getter and Setter
+    
     public Long getId() {
+        
         return id;
     }
 
     public String getTitle() {
+        
         return title;
     }
 
     public void setTitle(String title) {
+        
         this.title = title;
     }
 
-    public Integer getYear() {
+    public int getYear() {
+        
         return year;
     }
 
-    public void setYear(Integer year) {
+    public void setYear(int year) {
+        
         this.year = year;
     }
 
-    public String getType() {
+    public char getType() {
+        
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(char type) {
+        
         this.type = type;
     }
-
-    // Insert-Methode
+    
+    // Insert, Update and Delete Methods
+    
     public void insert() throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "INSERT INTO Movie (title, year, type) VALUES (?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, title);
-                stmt.setInt(2, year);
-                stmt.setString(3, type);
-                stmt.executeUpdate();
-                try (ResultSet rs = stmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        this.id = rs.getLong(1);
-                    }
+        if (id != null) {
+            throw new IllegalStateException("Object has already been inserted");
+        }
+
+        Connection conn = aufgabe1.getConnection();
+        String inst = "INSERT INTO Movie(title, year, type) VALUES(?, ?, ?) RETURNING movieid";
+
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            stmt.setString(1, title);
+            stmt.setInt(2, year);
+            stmt.setObject(3, type, java.sql.Types.CHAR);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    id = rs.getLong(1); // Speichert die generierte movieid in der Variable id
                 }
             }
         }
     }
 
-    // Update-Methode
+
+    
     public void update() throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "UPDATE Movie SET title = ?, year = ?, type = ? WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, title);
-                stmt.setInt(2, year);
-                stmt.setString(3, type);
-                stmt.setLong(4, id);
-                stmt.executeUpdate();
-            }
+        
+        if (id == null) {
+            
+            throw new IllegalStateException("Object has not been inserted");
+        }
+        
+        Connection conn = aufgabe1.getConnection();
+        
+        String inst = "UPDATE Movie SET Title = ?, Year = ?, Type = ? WHERE MovieID = ?";
+                
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setString(1, title);
+            stmt.setInt(2, year);
+            stmt.setString(3, String.valueOf(type));
+            stmt.setLong(4, id);
+            
+            stmt.executeUpdate();
         }
     }
-
-    // Delete-Methode
+    
     public void delete() throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "DELETE FROM Movie WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setLong(1, id);
-                stmt.executeUpdate();
-            }
+        
+        if (id == null) {
+            
+            throw new IllegalStateException("Object has not been inserted");
+        }
+        
+        Connection conn = aufgabe1.getConnection();
+        
+        String inst = "DELETE FROM Movie WHERE MovieID = ? ";
+                
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setLong(1, id);
+            
+            stmt.executeUpdate();
         }
     }
+    
+    //To DTO Method
+    
+    public MovieDTO toDTO() throws SQLException {
+        
+        MovieDTO movieDTO = new MovieDTO();
 
-    // FindById-Methode
+        movieDTO.setId(this.id);
+        movieDTO.setTitle(this.title);
+        movieDTO.setYear(this.year);
+        movieDTO.setType(String.valueOf(this.type));
+
+        movieDTO.setGenres(new HashSet<>());
+        movieDTO.setCharacters(new ArrayList<>());
+
+                 
+        for (Movie_Genre movieGenre : Movie_Genre.findByMovieID(this.id)) {
+            
+             movieDTO.addGenre(Genre.findById(movieGenre.getGenreID()).getGenre()); 
+        }
+       
+       
+        for (Character Character : Character.findByMovieID(this.id)) {
+            
+            movieDTO.addCharacter(Character.toDTO());       
+        }
+
+        return movieDTO;
+    }
+    
+    //Static Methods
+    
+    public static List<Movie> findAll() throws SQLException {
+        
+        Connection conn = aufgabe1.getConnection();
+
+        List<Movie> movieList = new ArrayList<>();
+        
+        String inst = "SELECT MovieID, Title, Year, Type FROM Movie";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+                
+            try (ResultSet rs = stmt.executeQuery()) {
+                
+                Movie movie = new Movie();
+                
+                movie.id = rs.getLong("MovieID");
+                movie.setTitle(rs.getString("Title"));
+                movie.setYear(rs.getInt("Year"));
+                movie.setType(rs.getString("Type").charAt(0));
+                
+                movieList.add(movie);
+            }
+        }
+        
+        return movieList;
+    }
+    
     public static Movie findById(long id) throws SQLException {
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT * FROM Movie WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setLong(1, id);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        Movie movie = new Movie();
-                        movie.id = rs.getLong("id");
-                        movie.title = rs.getString("title");
-                        movie.year = rs.getInt("year");
-                        movie.type = rs.getString("type");
-                        return movie;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+        
+        Connection conn = aufgabe1.getConnection();
 
-    // FindByTitle-Methode (Suche nach Filmtitel)
+        Movie movie = new Movie();
+        
+        movie.id = id;
+        
+        String inst = "SELECT Title, Year, Type FROM Movie WHERE MovieID = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setLong(1, id);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                
+                if (!rs.next()) {
+                    
+                    throw new IllegalArgumentException("Object with ID " + id + " does not exist");
+                }
+                
+                movie.setTitle(rs.getString("Title"));
+                movie.setYear(rs.getInt("Year"));
+                movie.setType(rs.getString("Type").charAt(0));
+            }
+        }
+        
+        return movie;
+    }
+     
     public static List<Movie> findByTitle(String title) throws SQLException {
+        
+        Connection conn = aufgabe1.getConnection();
+
         List<Movie> movies = new ArrayList<>();
-        try (Connection conn = aufgabe1.getConnection()) {
-            String sql = "SELECT * FROM Movie WHERE LOWER(title) LIKE LOWER(?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, "%" + title + "%");
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        Movie movie = new Movie();
-                        movie.id = rs.getLong("id");
-                        movie.title = rs.getString("title");
-                        movie.year = rs.getInt("year");
-                        movie.type = rs.getString("type");
-                        movies.add(movie);
-                    }
+                
+        String inst = "SELECT MovieID, Title, Year, Type FROM Movie WHERE LOWER(Title) LIKE ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            
+            stmt.setString(1, "%" + title.toLowerCase() + "%");
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                
+                while (rs.next()) {
+                    
+                    Movie movie = new Movie();
+                    
+                    movie.id = rs.getLong("MovieID");
+                    movie.setTitle(rs.getString("Title"));
+                    movie.setYear(rs.getInt("Year"));
+                    movie.setType(rs.getString("Type").charAt(0));
+                    
+                    movies.add(movie);
                 }
             }
         }
+        
         return movies;
     }
 }
