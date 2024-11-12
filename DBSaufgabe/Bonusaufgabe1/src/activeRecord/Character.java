@@ -11,36 +11,36 @@ import dtos.CharacterDTO;
 import aufgabe41.aufgabe1;
 
 /**
- * Die Klasse `Character` repräsentiert eine Filmfigur in der Datenbank.
- * Jede Figur hat eine eindeutige ID, einen Namen, einen Alias, eine Position im Film, 
- * und Verweise auf einen Film und eine Person (Darsteller).
- * Die Klasse bietet Methoden zum Einfügen, Aktualisieren, Löschen und
- * Abrufen von Figuren aus der Datenbank.
+ *klasse Character repräsentiert eine Filmfigur in der Datenbank
+ * jede Figur hat eine eindeutige ID, einen Namen, einen Alias, eine Position im Film, 
+ *und Verweise auf einen Film und eine Person (Darsteller)
+ *die Klasse bietet Methoden zum Einfügen, Aktualisieren, Löschen und
+ *Abrufen von Figuren aus der Datenbank
  */
 public class Character {
 
-    // Eindeutige ID der Figur, die beim Einfügen in die Datenbank gesetzt wird.
+    //eindeutige ID der Figur, die beim Einfügen in die Datenbank gesetzt wird.
     private Long id;
     
-    // Name der Figur im Film, z.B. "Luke Skywalker".
+    //name der Figur im Film
     private String character;
     
-    // Alias oder Spitzname der Figur, z.B. "Jedi-Ritter".
+    // Alias oder Spitzname der Figur
     private String alias;
     
-    // Position der Figur innerhalb des Films, z.B. 1 für die Hauptfigur.
+    //position der Figur innerhalb des Films
     private int position;
     
-    // ID des Films, zu dem die Figur gehört.
+    //ID des Films, zu dem die Figur gehört
     private Long movieID;
     
-    // ID der Person (Darsteller), die die Figur spielt.
+    //id der Person (Darsteller), die die Figur spielt
     private Long personID;
 
-    // Getter und Setter-Methoden für die Attribute der Klasse
+    //getter und Setter-Methoden für die Attribute der Klasse
     
     /**
-     * Gibt die ID der Figur zurück.
+     *gibt die ID der Figur zurück
      * @return ID der Figur als Long
      */
     public Long getID() {
@@ -48,7 +48,7 @@ public class Character {
     }
 
     /**
-     * Gibt den Namen der Figur zurück.
+     *gibt den Namen der Figur zurück
      * @return Name der Figur als String
      */
     public String getCharacter(){
@@ -56,15 +56,15 @@ public class Character {
     }
 
     /**
-     * Setzt den Namen der Figur.
-     * @param character Der Name der Figur als String, darf nicht null sein.
+     *setzt den Namen der Figur
+     * @param character Der Name der Figur als String, darf nicht null sein
      */
     public void setCharacter(String character) {
         this.character = character;
     }
 
     /**
-     * Gibt den Alias der Figur zurück.
+     *gibt den Alias der Figur zurück
      * @return Alias der Figur als String
      */
     public String getAlias() {
@@ -72,15 +72,15 @@ public class Character {
     }
 
     /**
-     * Setzt den Alias der Figur.
-     * @param alias Der Alias der Figur als String.
+     *setzt den Alias der Figur
+     * @param alias Der Alias der Figur als String
      */
     public void setAlias(String alias) {
         this.alias = alias;
     }
 
     /**
-     * Gibt die Position der Figur im Film zurück.
+     *gibt die Position der Figur im Film zurück
      * @return Position der Figur als int
      */
     public int getPosition() {
@@ -88,15 +88,15 @@ public class Character {
     }
 
     /**
-     * Setzt die Position der Figur im Film.
-     * @param position Die Position der Figur als int.
+     *setzt die Position der Figur im Film
+     * @param position Die Position der Figur als int
      */
     public void setPosition(int position) {
         this.position = position;
     }
 
     /**
-     * Gibt die ID des Films zurück, zu dem die Figur gehört.
+     *gibt die ID des Films zurück, zu dem die Figur gehört
      * @return Film-ID als Long
      */
     public Long getMovieID() {
@@ -104,15 +104,15 @@ public class Character {
     }
 
     /**
-     * Setzt die ID des Films, zu dem die Figur gehört.
-     * @param movieID Die Film-ID als Long.
+     *setzt die ID des Films, zu dem die Figur gehört
+     * @param movieID Die Film-ID als Long
      */
     public void setMovieID(Long movieID){
         this.movieID = movieID;
     }
 
     /**
-     * Gibt die ID der Person (Darsteller) zurück, die die Figur spielt.
+     *gibt die ID der Person (Darsteller) zurück, die die Figur spielt
      * @return Personen-ID als Long
      */
     public Long getPersonID(){
@@ -120,8 +120,8 @@ public class Character {
     }
 
     /**
-     * Setzt die ID der Person (Darsteller), die die Figur spielt.
-     * @param personID Die Personen-ID als Long.
+     *setzt die ID der Person (Darsteller), die die Figur spielt
+     * @param personID Die Personen-ID als Long
      */
     public void setPersonID(Long personID){
         this.personID = personID;
@@ -130,8 +130,8 @@ public class Character {
     // Methoden zur Datenbankmanipulation (Einfügen, Aktualisieren, Löschen)
 
     /**
-     * Fügt eine neue Figur in die Datenbank ein.
-     * Die ID der Figur wird automatisch generiert und nach dem Einfügen gesetzt.
+     *fügt eine neue Figur in die Datenbank ein
+     *die ID der Figur wird automatisch generiert und nach dem Einfügen gesetzt.
      * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
      * @throws IllegalStateException Falls die Figur bereits eine ID besitzt (bereits eingefügt wurde).
      */
@@ -177,10 +177,10 @@ public class Character {
     }
 
     /**
-     * Aktualisiert die vorhandenen Daten einer Figur in der Datenbank.
-     * Die Figur muss bereits in die Datenbank eingefügt worden sein.
-     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
-     * @throws IllegalStateException Falls die Figur noch keine ID besitzt.
+     * Aktualisiert die vorhandenen Daten einer Figur in der Datenbank
+     *Die Figur muss bereits in die Datenbank eingefügt worden sein
+     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt
+     * @throws IllegalStateException Falls die Figur noch keine ID besitzt
      */
     public void update() throws SQLException {
         // Verhindert das Aktualisieren, wenn die Figur noch keine ID hat
@@ -214,10 +214,10 @@ public class Character {
     }
 
     /**
-     * Löscht eine Figur aus der Datenbank.
-     * Die Figur muss bereits in die Datenbank eingefügt worden sein.
-     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
-     * @throws IllegalStateException Falls die Figur noch keine ID besitzt.
+     *Löscht eine Figur aus der Datenbank
+     * Die Figur muss bereits in die Datenbank eingefügt worden sein
+     *@throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt
+     * @throws IllegalStateException Falls die Figur noch keine ID besitzt
      */
     public void delete() throws SQLException {
         // Verhindert das Löschen, wenn die Figur noch keine ID hat
@@ -241,38 +241,38 @@ public class Character {
     }
 
     /**
-     * Konvertiert die aktuelle Figur in ein `CharacterDTO`-Objekt.
-     * Das DTO enthält die relevanten Informationen zur Figur sowie den Namen des Darstellers.
-     * @return Ein `CharacterDTO`-Objekt, das die Daten der Figur repräsentiert.
-     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
+     *Konvertiert die aktuelle Figur in ein CharacterDTO-Objekt
+     * Das DTO enthält die relevanten Informationen zur Figur sowie den Namen des Darstellers
+     * @return Ein `CharacterDTO`-Objekt, das die Daten der Figur repräsentiert
+     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt
      */
     public CharacterDTO toDTO() throws SQLException {
         CharacterDTO characterDTO = new CharacterDTO();
 
-        // Setzt den Namen und Alias der Figur im DTO
+        //Setzt den Namen und Alias der Figur im DTO
         characterDTO.setCharacter(this.character);
         characterDTO.setAlias(this.alias);
 
-        // Setzt den Namen des Darstellers basierend auf der PersonID
+        //setzt den Namen des Darstellers basierend auf der PersonID
         characterDTO.setPlayer(Person.findById(this.personID).getName());
 
         return characterDTO;
     }
 
-    // Statische Methoden zur Abfrage von Charakterdaten aus der Datenbank
+    //Statische Methoden zur Abfrage von Charakterdaten aus der Datenbank
 
     /**
-     * Gibt eine Liste aller Figuren aus der Datenbank zurück.
-     * @return Eine Liste von `Character`-Objekten, die alle Figuren in der Datenbank repräsentieren.
-     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
+     * Gibt eine Liste aller Figuren aus der Datenbank zurück
+     * @return Eine Liste von `Character`-Objekten, die alle Figuren in der Datenbank repräsentieren
+     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt
      */
     public static List<Character> findAll() throws SQLException {
-        // Verbindung zur Datenbank wird hergestellt
+        //verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
 
         List<Character> movieCharacterList = new ArrayList<>();
 
-        // SQL-Statement, um alle Figuren abzurufen
+        //SQL-Statement, um alle Figuren abzurufen
         String inst = "SELECT MovCharID, Character, Alias, Position, MovieID, PersonID FROM MovieCharacter";
 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
@@ -298,20 +298,20 @@ public class Character {
     }
 
     /**
-     * Sucht eine Figur in der Datenbank basierend auf der ID.
+     *sucht eine Figur in der Datenbank basierend auf der ID.
      * @param id Die ID der Figur.
      * @return Das `Character`-Objekt mit den Daten der Figur.
      * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
      * @throws IllegalArgumentException Falls die Figur mit der gegebenen ID nicht existiert.
      */
     public static Character findById(long id) throws SQLException {
-        // Verbindung zur Datenbank wird hergestellt
+        //verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
 
         Character movieCharacter = new Character();
         movieCharacter.id = id;
 
-        // SQL-Statement zur Suche der Figur nach ID
+        //SQL-Statement zur Suche der Figur nach ID
         String inst = "SELECT Character, Alias, Position, MovieID, PersonID FROM MovieCharacter WHERE MovCharID = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
@@ -337,22 +337,22 @@ public class Character {
     }
 
     /**
-     * Sucht alle Figuren, die zu einem bestimmten Film gehören.
-     * @param movieID Die ID des Films.
-     * @return Eine Liste von `Character`-Objekten, die zu dem Film gehören.
-     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
+     *sucht alle Figuren, die zu einem bestimmten Film gehören
+     * @param movieID Die ID des Films
+     * @return Eine Liste von `Character`-Objekten, die zu dem Film gehören
+     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt
      */
     public static List<Character> findByMovieID(long movieID) throws SQLException {
-        // Verbindung zur Datenbank wird hergestellt
+        //verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
 
         List<Character> movieCharacterList = new ArrayList<>();
 
-        // SQL-Statement zur Suche von Figuren nach der Film-ID
+        //SQL-Statement zur Suche von Figuren nach der Film-ID
         String inst = "SELECT MovCharID, Character, Alias, Position, PersonID FROM MovieCharacter WHERE MovieID = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
-            // Setzt die Film-ID als Parameter für das Select-Statement (? → movieID)
+            //Setzt die Film-ID als Parameter für das Select-Statement (? → movieID)
             stmt.setLong(1, movieID);
 
             // Führt das SQL-Select-Statement aus und holt alle Figuren des angegebenen Films
@@ -377,10 +377,10 @@ public class Character {
     }
 
     /**
-     * Sucht alle Figuren, die von einer bestimmten Person gespielt werden.
-     * @param personID Die ID der Person (Darsteller).
-     * @return Eine Liste von `Character`-Objekten, die von der Person gespielt werden.
-     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
+     *Sucht alle Figuren, die von einer bestimmten Person gespielt werden
+     *@param personID Die ID der Person (Darsteller)
+     * @return Eine Liste von `Character`-Objekten, die von der Person gespielt werden
+     * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt
      */
     public static List<Character> findByPersonID(long personID) throws SQLException {
         // Verbindung zur Datenbank wird hergestellt
@@ -407,7 +407,7 @@ public class Character {
                     character.setMovieID(rs.getLong("MovieID"));
                     character.setPersonID(personID);
 
-                    // Fügt die gefundene Figur zur movieCharacterList hinzu
+                    //Fügt die gefundene Figur zur movieCharacterList hinzu
                     movieCharacterList.add(character);
                 }
             }
