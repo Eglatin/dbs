@@ -1,62 +1,96 @@
 package dtos;
 
 /**
- * Data Transfer Object (DTO) für Objekte der Klasse Character.
- * Diese Klasse dient zur Übertragung von Charakter-Daten zwischen der GUI und der Geschäftslogik.
- * Enthält alle relevanten Informationen eines Charakters: den Namen des Charakters, Alias und den Darsteller.
+ * Die Klasse `CharacterDTO` dient als Data Transfer Object (DTO) für eine Filmfigur.
+ * Diese Klasse wird verwendet, um die Daten einer Figur zwischen der GUI und der Geschäftslogik zu übertragen.
+ * Sie enthält alle relevanten Informationen zur Figur, einschließlich ihres Namens, ihres Alias und des Darstellers.
  */
 public class CharacterDTO {
-    private String character; // Name des Charakters
-    private String alias;     // Alias des Charakters
-    private String player;    // Name des Darstellers
+    
+    // Der Name der Figur, z.B. "Luke Skywalker"
+    private String character;
+    
+    // Der Alias oder Spitzname der Figur, z.B. "Jedi-Ritter"
+    private String alias;
+    
+    // Der Name des Darstellers, der die Figur spielt, z.B. "Mark Hamill"
+    private String player;
 
-    // Standardkonstruktor
+    /**
+     * Standardkonstruktor.
+     * Erzeugt ein neues, leeres `CharacterDTO`-Objekt.
+     */
     public CharacterDTO() {}
 
-    // Kopierkonstruktor: Erzeugt eine Kopie eines anderen CharacterDTO-Objekts
+    /**
+     * Kopierkonstruktor.
+     * Erzeugt eine Kopie eines anderen `CharacterDTO`-Objekts.
+     * @param that Das `CharacterDTO`-Objekt, das kopiert werden soll.
+     */
     public CharacterDTO(CharacterDTO that) {
         this.character = that.character;
         this.alias = that.alias;
         this.player = that.player;
     }
 
-    // Getter für den Charakternamen
+    // Getter- und Setter-Methoden für die Attribute der Klasse
+
+    /**
+     * Gibt den Namen der Figur zurück.
+     * @return Name der Figur als String
+     */
     public String getCharacter() {
         return character;
     }
 
-    // Setter für den Charakternamen
+    /**
+     * Setzt den Namen der Figur.
+     * @param character Der Name der Figur als String, darf nicht null sein.
+     */
     public void setCharacter(String character) {
         this.character = character;
     }
 
-    // Getter für den Alias des Charakters
+    /**
+     * Gibt den Alias der Figur zurück.
+     * @return Alias der Figur als String
+     */
     public String getAlias() {
         return alias;
     }
 
-    // Setter für den Alias des Charakters
+    /**
+     * Setzt den Alias der Figur.
+     * @param alias Der Alias der Figur als String.
+     */
     public void setAlias(String alias) {
         this.alias = alias;
     }
 
-    // Getter für den Namen des Darstellers
+    /**
+     * Gibt den Namen des Darstellers zurück, der die Figur spielt.
+     * @return Name des Darstellers als String
+     */
     public String getPlayer() {
         return player;
     }
 
-    // Setter für den Namen des Darstellers
+    /**
+     * Setzt den Namen des Darstellers, der die Figur spielt.
+     * @param player Der Name des Darstellers als String.
+     */
     public void setPlayer(String player) {
         this.player = player;
     }
 
-    // Überschreibt die toString-Methode, um die Charakterinformationen als Zeichenkette darzustellen
+    /**
+     * Gibt eine textuelle Darstellung der Figur zurück.
+     * Diese Methode wird typischerweise verwendet, um die Informationen der Figur 
+     * in einer benutzerfreundlichen Form anzuzeigen.
+     * @return Eine Zeichenkette, die den Namen, Alias und Darsteller der Figur enthält.
+     */
     @Override
     public String toString() {
         return "CharacterDTO [character=" + character + ", alias=" + alias + ", player=" + player + "]";
     }
 }
-
-
-
-
