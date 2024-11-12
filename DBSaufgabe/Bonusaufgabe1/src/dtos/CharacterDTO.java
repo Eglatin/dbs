@@ -7,7 +7,7 @@ package dtos;
  */
 public class CharacterDTO {
     
-    //name der Figur z.B. Luke Skywalker
+    //name der Figur 
     private String character;
     
     //alias o. Spitzname der Figur
@@ -23,9 +23,9 @@ public class CharacterDTO {
     public CharacterDTO() {}
 
     /**
-     * Kopierkonstruktor.
-     * Erzeugt eine Kopie eines anderen `CharacterDTO`-Objekts.
-     * @param that Das `CharacterDTO`-Objekt, das kopiert werden soll.
+     * Kopierkonstruktor
+     * Erzeugt eine Kopie eines anderen `CharacterDTO`-Objekts
+     * @param that Das `CharacterDTO`-Objekt, das kopiert werden soll
      */
     public CharacterDTO(CharacterDTO that) {
         this.character = that.character;
@@ -36,7 +36,7 @@ public class CharacterDTO {
     // Getter- und Setter-Methoden für die Attribute der Klasse
 
     /**
-     * Gibt den Namen der Figur zurück.
+      gibt den Namen der Figur zurück
      * @return Name der Figur als String
      */
     public String getCharacter() {
@@ -44,7 +44,7 @@ public class CharacterDTO {
     }
 
     /**
-     * Setzt den Namen der Figur.
+     * Setzt den Namen der Figur
      * @param character Der Name der Figur als String, darf nicht null sein.
      */
     public void setCharacter(String character) {
@@ -68,7 +68,7 @@ public class CharacterDTO {
     }
 
     /**
-     * Gibt den Namen des Darstellers zurück, der die Figur spielt.
+     * Gibt namen des darstellers zurück, der die Figur spielt
      * @return Name des Darstellers als String
      */
     public String getPlayer() {
