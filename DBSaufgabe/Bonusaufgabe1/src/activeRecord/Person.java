@@ -85,24 +85,26 @@ public class Person {
         // Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
         
-        // SQL-Statement zum Einfügen einer neuen Person
+        // SQL-Statement zum Einfügen einer neuen Person in die `Person`-Tabelle
         String inst1 = "INSERT INTO Person(Name, Sex) VALUES(?, ?)";
         
-        // Abrufen der neu generierten ID nach dem Einfügen
+        // SQL-Statement zum Abrufen der neu generierten ID nach dem Einfügen
         String inst2 = "SELECT last_insert_rowid() AS PersonID";
                 
         try (PreparedStatement stmt1 = conn.prepareStatement(inst1)) {
-            // Setzt die Werte für das vorbereitete SQL-Statement
+            // Setzt den Namen für die erste Platzhalter-Variable (? → name)
             stmt1.setString(1, name);
+            // Setzt das Geschlecht für die zweite Platzhalter-Variable (? → sex)
             stmt1.setString(2, String.valueOf(sex));
             
-            // Führt das Einfügen in die Datenbank aus
+            // Führt das SQL-Insert-Statement aus, um die Person in die Datenbank einzufügen
             stmt1.executeUpdate();
             
-            // Abfragen der generierten ID und Zuweisung an die ID-Variable der Person
+            // Abrufen der generierten ID nach dem Einfügen
             try (PreparedStatement stmt2 = conn.prepareStatement(inst2)){
                 try (ResultSet rs = stmt2.executeQuery()) {
                     rs.next();
+                    // Setzt die generierte ID der Person, basierend auf dem Ergebnis des Select-Statements
                     id = rs.getLong("PersonID");
                 }
             }
@@ -121,17 +123,21 @@ public class Person {
             throw new IllegalStateException("Objekt wurde noch nicht eingefügt");
         }
         
+        // Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
         
         // SQL-Statement zum Aktualisieren der Personendaten basierend auf der ID
         String inst = "UPDATE Person SET Name = ?, Sex = ? WHERE PersonID = ?";
                 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            // Setzt den Namen für die erste Platzhalter-Variable (? → name)
             stmt.setString(1, name);
+            // Setzt das Geschlecht für die zweite Platzhalter-Variable (? → sex)
             stmt.setString(2, String.valueOf(sex));
+            // Setzt die ID für die dritte Platzhalter-Variable, um die entsprechende Zeile zu identifizieren (? → id)
             stmt.setLong(3, id);
             
-            // Führt das Update aus
+            // Führt das SQL-Update-Statement aus, um die Personendaten zu aktualisieren
             stmt.executeUpdate();
         }
     }
@@ -148,15 +154,17 @@ public class Person {
             throw new IllegalStateException("Objekt wurde noch nicht eingefügt");
         }
         
+        // Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
         
         // SQL-Statement zum Löschen der Person basierend auf der ID
         String inst = "DELETE FROM Person WHERE PersonID = ?";
                 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            // Setzt die ID der Person als Parameter für das Delete-Statement (? → id)
             stmt.setLong(1, id);
             
-            // Führt das Löschen aus
+            // Führt das SQL-Delete-Statement aus, um die Person zu löschen
             stmt.executeUpdate();
         }
     }
@@ -169,6 +177,7 @@ public class Person {
      * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
      */
     public static List<Person> findAll() throws SQLException {
+        // Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
 
         List<Person> personList = new ArrayList<>();
@@ -177,14 +186,17 @@ public class Person {
         String inst = "SELECT PersonID, Name, Sex FROM Person";
         
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            // Führt das SQL-Select-Statement aus und holt alle Personen aus der Tabelle
             try (ResultSet rs = stmt.executeQuery()) {
                 // Durchläuft das ResultSet und fügt jede Person zur Liste hinzu
                 while (rs.next()) {
                     Person person = new Person();
+                    // Setzt die ID, Name und Geschlecht für jede gefundene Person
                     person.id = rs.getLong("PersonID");
                     person.setName(rs.getString("Name"));
                     person.setSex(rs.getString("Sex").charAt(0));
                     
+                    // Fügt die gefundene Person zur personList hinzu
                     personList.add(person);
                 }
             }
@@ -201,24 +213,27 @@ public class Person {
      * @throws IllegalArgumentException Falls die Person mit der gegebenen ID nicht existiert.
      */
     public static Person findById(long id) throws SQLException {
+        // Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
 
         Person person = new Person();
-        
         person.id = id;
         
-        // SQL-Statement zur Suche einer Person nach ID
+        // SQL-Statement zur Suche der Person nach ID
         String inst = "SELECT Name, Sex FROM Person WHERE PersonID = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            // Setzt die ID der Person als Parameter für das Select-Statement (? → id)
             stmt.setLong(1, id);
             
+            // Führt das SQL-Select-Statement aus, um die Person anhand der ID zu suchen
             try (ResultSet rs = stmt.executeQuery()) {
-                // Prüft, ob das ResultSet ein Ergebnis enthält
+                // Prüft, ob das ResultSet ein Ergebnis enthält (Person mit der ID existiert)
                 if (!rs.next()) {
                     throw new IllegalArgumentException("Objekt mit ID " + id + " existiert nicht");
                 }
                 
+                // Setzt Name und Geschlecht der gefundenen Person
                 person.setName(rs.getString("Name"));
                 person.setSex(rs.getString("Sex").charAt(0));
             }
@@ -234,6 +249,7 @@ public class Person {
      * @throws SQLException Falls ein Fehler bei der Datenbankoperation auftritt.
      */
     public static List<Person> findByName(String name) throws SQLException {
+        // Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
 
         List<Person> people = new ArrayList<>();
@@ -242,16 +258,20 @@ public class Person {
         String inst = "SELECT PersonID, Name, Sex FROM Person WHERE LOWER(Name) LIKE ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
+            // Setzt den Namen als Parameter für das LIKE-Statement, mit % für die Wildcard-Suche (? → name)
             stmt.setString(1, "%" + name.toLowerCase() + "%");
             
+            // Führt das SQL-Select-Statement aus und holt alle Personen, deren Name den Suchstring enthält
             try (ResultSet rs = stmt.executeQuery()) {
-                // Fügt jede gefundene Person der Liste hinzu
+                // Durchläuft das ResultSet und fügt jede gefundene Person zur Liste hinzu
                 while (rs.next()) {
                     Person person = new Person();
+                    // Setzt die ID, Name und Geschlecht für jede gefundene Person
                     person.id = rs.getLong("PersonID");
                     person.setName(rs.getString("Name"));
                     person.setSex(rs.getString("Sex").charAt(0));
                     
+                    // Fügt die gefundene Person zur people-Liste hinzu
                     people.add(person);
                 }
             }
