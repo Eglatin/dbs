@@ -13,14 +13,14 @@ import dtos.MovieDTO;
 import aufgabe41.aufgabe1;
 
 /**
- * MovieManager verwaltet die Datenbankzugriffe und -operationen 
+ * movieManager verwaltet die Datenbankzugriffe und -operationen 
  * für Film-Entitäten. stellt Methoden zur Verfügung, um Filme zu suchen,
  * hinzuzufügen, aktualisieren und löschen
  */
 public class MovieManager {
 
     /**
-     * Sucht alle Filme, die den Suchstring im Titel enthalten. Gibt alle Filme zurück, wenn der Suchstring leer ist
+     *sucht alle Filme, die den Suchstring im Titel enthalten. Gibt alle Filme zurück, wenn der Suchstring leer ist
      * Vergleich ohne Berücksichtigung groß und kleinschreibung
      * @param search Suchstring für den Filmtitel.
      * @return Eine Liste von MovieDTO-Objekten, die die passenden Filme repräsentieren
@@ -36,7 +36,7 @@ public class MovieManager {
                 movies.add(movie.toDTO());
             }
 
-            //Bestätigt die Transaktion durch Commit
+            //bestätigt die Transaktion durch Commit
             aufgabe1.getConnection().commit();
             ok = true; // Setzt den Transaktionsstatus auf erfolgreich
 
@@ -158,7 +158,7 @@ public class MovieManager {
                 movieGenre.delete();
             }
 
-            // Löscht Film selbst
+            //löscht Film selbst
             Movie movie = Movie.findById(movieId);
             if (movie != null) {
                 movie.delete();
