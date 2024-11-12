@@ -6,23 +6,23 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Die Klasse `MovieDTO` dient als Data Transfer Object (DTO) für Filme.
+ * Die Klasse MovieDTO dient als Data Transfer Object (DTO) für Filme.
  * Dieses Objekt wird verwendet, um alle notwendigen Filminformationen zwischen GUI und Geschäftslogik zu übertragen,
  * einschließlich aller zugeordneten Genres und Charaktere.
- * Die ID ist `null`, falls es sich um einen neuen Film handelt.
+ * Die ID ist `null`, falls es sich um einen neuen Film handelt
  */
 public class MovieDTO {
 
-    // Eindeutige ID des Films. Ist `null` bei neuen Filmen, die noch nicht in der Datenbank gespeichert sind.
+    // Eindeutige ID des Films ist null bei neuen Filmen, die noch nicht in der Datenbank gespeichert sind
     private Long id = null;
     
-    // Titel des Films, z.B. "Star Wars"
+    // Titel des Films
     private String title = "";
     
-    // Typ des Films, z.B. 'F' für Film, 'T' für TV-Serie
+    // Typ des Films,
     private String type = "C";
     
-    // Erscheinungsjahr des Films, z.B. 1977 für "Star Wars"
+    // Erscheinungsjahr des Films
     private int year = 0;
     
     // Set zur Speicherung der Genres des Films, um doppelte Werte zu vermeiden
@@ -35,7 +35,7 @@ public class MovieDTO {
 
     /**
      * Gibt die ID des Films zurück.
-     * @return ID des Films als Long oder `null`, wenn es ein neuer Film ist
+     * @return ID des Films als Long oder null, wenn es ein neuer Film ist
      */
     public Long getId() {
         return id;
@@ -67,7 +67,7 @@ public class MovieDTO {
 
     /**
      * Gibt den Typ des Films zurück.
-     * @return Typ des Films als String, z.B. "F" für Film, "T" für TV-Serie
+     * @return Typ des Films als String
      */
     public String getType() {
         return type;
@@ -75,14 +75,14 @@ public class MovieDTO {
 
     /**
      * Setzt den Typ des Films.
-     * @param type Der Typ des Films als String, z.B. "F" für Film oder "T" für TV-Serie.
+     * @param type Der Typ des Films als String
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * Gibt das Erscheinungsjahr des Films zurück.
+     * Gibt das Erscheinungsjahr des Films zurück
      * @return Erscheinungsjahr des Films als int
      */
     public int getYear() {
@@ -90,16 +90,16 @@ public class MovieDTO {
     }
 
     /**
-     * Setzt das Erscheinungsjahr des Films.
-     * @param year Das Erscheinungsjahr des Films als int.
+     * Setzt das Erscheinungsjahr des Films
+     * @param year Das Erscheinungsjahr des Films als int
      */
     public void setYear(int year) {
         this.year = year;
     }
 
     /**
-     * Gibt die Genres des Films als `Set` zurück.
-     * @return Ein `Set` mit den Namen der Genres des Films
+     *gibt die Genres des Films als Set zurück
+     * @return Ein Set mit den Namen der Genres des Films
      */
     public Set<String> getGenres() {
         return genres;
@@ -114,8 +114,8 @@ public class MovieDTO {
     }
 
     /**
-     * Gibt die Charaktere des Films als `List` zurück.
-     * @return Eine `List` mit `CharacterDTO`-Objekten, die die Charaktere des Films repräsentieren
+     * Gibt die Charaktere des Films als list zurück
+     * @return Eine `List` mit characterDTO-Objekten, die die Charaktere des Films repräsentieren
      */
     public List<CharacterDTO> getCharacters() {
         return characters;
@@ -123,7 +123,7 @@ public class MovieDTO {
 
     /**
      * Setzt die Charaktere des Films.
-     * @param characters Eine `List` mit `CharacterDTO`-Objekten, die die Charaktere des Films repräsentieren
+     * @param characters Eine `List` mit caracterDTO-Objekten, die die Charaktere des Films repräsentieren
      */
     public void setCharacters(List<CharacterDTO> characters) {
         this.characters = characters;
@@ -146,9 +146,9 @@ public class MovieDTO {
     }
 
     /**
-     * Gibt eine textuelle Darstellung des Films zurück.
+     * Gibt textuelle Darstellung des Films zurück
      * Diese Methode wird typischerweise verwendet, um die Informationen des Films 
-     * in einer benutzerfreundlichen Form anzuzeigen.
+     * in einer benutzerfreundlichen Form anzuzeigen
      * @return Eine Zeichenkette, die die ID, den Titel, den Typ, das Jahr, Genres und Charaktere des Films enthält.
      */
     @Override
