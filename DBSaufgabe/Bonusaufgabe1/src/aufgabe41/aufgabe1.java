@@ -10,12 +10,12 @@ import gui.SearchMovieDialogCallback;
 
 public class aufgabe1 {
 
-    // Statische Verbindung zur Datenbank
+    //statische Verbindung zur Datenbank
     private static Connection conn;
 
     static {
         try {
-            // Verbindungsdetails festlegen
+            //Verbindungsdetails festlegen
             String host = "localhost";
             String port = "5433";
             String database = "db01";
@@ -36,7 +36,7 @@ public class aufgabe1 {
         }
     }
 
-    // Zugriffsmethode für die Verbindung
+    // Zugriffsmethode fürverbindung
     public static Connection getConnection() {
         return conn;
     }
@@ -49,7 +49,7 @@ public class aufgabe1 {
             }
         });
 
-        // Beispiel: Abfrage und Ausgabe der Genre-Tabelle
+        // Beispiel: abfrage und Ausgabe der Genre-Tabelle
         try {
             queryGenreTable();
         } catch (Exception e) {
@@ -57,17 +57,17 @@ public class aufgabe1 {
         }
     }
 
-    // Methode zur Ausf端hrung der Anwendung und Anzeige der GUI
+    // Methode zur ausführung der Anwendung und Anzeige der GUI
     public void run() {
         SearchMovieDialogCallback callback = new SearchMovieDialogCallback();
         SearchMovieDialog sd = new SearchMovieDialog(callback);
         sd.setVisible(true);
     }
 
-    // Beispielmethode zum Abfragen und Ausgeben der Movie-Tabelle
+    //beispielmethode zum Abfragen und Ausgeben der Movie-Tabelle
     public static void queryGenreTable() throws Exception {
         Statement stmt = conn.createStatement();
-        String sql = "SELECT * FROM Movie";  // Beispiel: Abfrage der Movie-Tabelle
+        String sql = "SELECT * FROM Movie";  //beispiel: Abfrage der Movie-Tabelle
         ResultSet rs = stmt.executeQuery(sql);
         
         // Abfrageergebnisse ausgeben
