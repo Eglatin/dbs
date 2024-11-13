@@ -106,15 +106,15 @@ public class Movie {
         // Verbindung zur Datenbank wird hergestellt
         Connection conn = aufgabe1.getConnection();
         
-        // SQL-Statement zum Einfügen eines neuen Films in die `Movie`-Tabelle
+        // SQL-Statement zum Einfügen eines neuen Films in die Movie-Tabelle
         String inst = "INSERT INTO Movie(title, year, type) VALUES(?, ?, ?) RETURNING movieid";
 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
-            // Setzt den Titel für die erste Platzhalter-Variable (? → title)
+            // Setzt den Titel für die erste Platzhalter-Variable
             stmt.setString(1, title);
-            // Setzt das Jahr für die zweite Platzhalter-Variable (? → year)
+            // Setzt das Jahr für die zweite Platzhalter-Variable 
             stmt.setInt(2, year);
-            // Setzt den Typ für die dritte Platzhalter-Variable (? → type)
+            // Setzt den Typ für die dritte Platzhalter-Variable 
             stmt.setObject(3, type, java.sql.Types.CHAR);
 
             // Führt das SQL-Insert-Statement aus und erhält das ResultSet mit der generierten ID
@@ -146,13 +146,13 @@ public class Movie {
         String inst = "UPDATE Movie SET Title = ?, Year = ?, Type = ? WHERE MovieID = ?";
                 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
-            // Setzt den Titel für die erste Platzhalter-Variable (? → title)
+            // Setzt den Titel für die erste Platzhalter-Variable 
             stmt.setString(1, title);
-            // Setzt das Jahr für die zweite Platzhalter-Variable (? → year)
+            // Setzt das Jahr für die zweite Platzhalter-Variable 
             stmt.setInt(2, year);
-            // Setzt den Typ für die dritte Platzhalter-Variable (? → type)
+            // Setzt den Typ für die dritte Platzhalter-Variable 
             stmt.setString(3, String.valueOf(type));
-            // Setzt die ID für die vierte Platzhalter-Variable (? → id)
+            // Setzt die ID für die vierte Platzhalter-Variable 
             stmt.setLong(4, id);
             
             //Führt das SQL-Update-Statement aus, um die Filmdaten zu aktualisieren
@@ -179,7 +179,7 @@ public class Movie {
         String inst = "DELETE FROM Movie WHERE MovieID = ?";
                 
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
-            // setzt die ID des Films als Parameter für das Delete-Statement (? → id)
+            // setzt die ID des Films als Parameter für das Delete-Statement
             stmt.setLong(1, id);
             
             // Führt das SQL-Delete-Statement aus, um den Film zu löschen
@@ -273,7 +273,7 @@ public class Movie {
         String inst = "SELECT Title, Year, Type FROM Movie WHERE MovieID = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
-            // Setzt die ID des Films als Parameter für das Select-Statement (? → id)
+            // Setzt die ID des Films als Parameter für das Select-Statement
             stmt.setLong(1, id);
             
             // Führt das SQL-Select-Statement aus, um den Film anhand der ID zu suchen
@@ -304,11 +304,11 @@ public class Movie {
 
         List<Movie> movies = new ArrayList<>();
                 
-        // SQL-Statement zur Suche von Filmen nach Titel (case-insensitive)
+        // SQL-Statement zur Suche von Filmen nach Titel
         String inst = "SELECT MovieID, Title, Year, Type FROM Movie WHERE LOWER(Title) LIKE ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(inst)) {
-            // Setzt den Titel als Parameter für das LIKE-Statement, mit % für die Wildcard-Suche (? → title)
+            // Setzt den Titel als Parameter für das LIKE-Statement, mit % für die Wildcard-Suche
             stmt.setString(1, "%" + title.toLowerCase() + "%");
             
             // Führt das SQL-Select-Statement aus und holt alle Filme, deren Titel den Suchstring enthält
