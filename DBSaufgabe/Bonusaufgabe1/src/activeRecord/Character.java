@@ -151,15 +151,15 @@ public class Character {
         String inst2 = "SELECT last_insert_rowid() AS MovCharID";
 
         try (PreparedStatement stmt1 = conn.prepareStatement(inst1)) {
-            // Setzt den Namen der Figur (? → character)
+            // Setzt den Namen der Figur 
             stmt1.setString(1, character);
-            // Setzt den Alias der Figur (? → alias)
+            // Setzt den Alias der Figur
             stmt1.setString(2, alias);
-            // Setzt die Position der Figur (? → position)
+            // Setzt die Position der Figur
             stmt1.setInt(3, position);
-            // Setzt die ID des Films (? → movieID)
+            // Setzt die ID des Films
             stmt1.setLong(4, movieID);
-            // Setzt die ID der Person (? → personID)
+            // Setzt die ID der Person
             stmt1.setLong(5, personID);
 
             // Führt das SQL-Insert-Statement aus, um die Figur in die Datenbank einzufügen
