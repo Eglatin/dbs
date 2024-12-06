@@ -7,6 +7,7 @@ import java.util.Set;
 @Entity
 public class Genre {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
