@@ -1,52 +1,68 @@
 package de.hsh.dbs2.imdb.entities;
 
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "Movie")
 public class Movie {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
+    private int id;
     private String title;
+    private int year;
+    private String type;
 
-    @ManyToMany
-    @JoinTable(
-        name = "Movie_Genre",
-        joinColumns = @JoinColumn(name = "movie_id"),
-        inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
-    private List<Genre> genres;
-
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-    private List<MovieCharacter> characters;
+    @ManyToMany(mappedBy = "movies")
+    private Set<Genre> genres = new HashSet<>();
 
     // Getter und Setter
-    public Long getId() {
+    public int getId() {
         return id;
     }
-    public void setId(Long id) {
+
+    public void setId(int id) {
         this.id = id;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
-    public List<Genre> getGenres() {
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Set<Genre> getGenres() {
         return genres;
     }
-    public void setGenres(List<Genre> genres) {
+
+    public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
-    public List<MovieCharacter> getCharacters() {
-        return characters;
-    }
-    public void setCharacters(List<MovieCharacter> characters) {
-        this.characters = characters;
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", year=" + year +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

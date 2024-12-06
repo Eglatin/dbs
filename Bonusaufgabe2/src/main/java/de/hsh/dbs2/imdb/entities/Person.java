@@ -20,19 +20,32 @@ public class Person {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public List<MovieCharacter> getCharacters() {
         return characters;
     }
+
     public void setCharacters(List<MovieCharacter> characters) {
         this.characters = characters;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

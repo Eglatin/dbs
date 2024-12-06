@@ -24,25 +24,42 @@ public class MovieCharacter {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public Person getActor() {
         return actor;
     }
+
     public void setActor(Person actor) {
         this.actor = actor;
     }
+
     public Movie getMovie() {
         return movie;
     }
+
     public void setMovie(Movie movie) {
         this.movie = movie;
+    }
+
+    @Override
+    public String toString() {
+        return "MovieCharacter{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", actor=" + (actor != null ? actor.getName() : "null") +
+                ", movie=" + (movie != null ? movie.getTitle() : "null") +
+                '}';
     }
 }

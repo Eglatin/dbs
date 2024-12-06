@@ -1,38 +1,53 @@
 package de.hsh.dbs2.imdb.entities;
 
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "Genre")
 public class Genre {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
+    private int id;
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
-    private List<Movie> movies;
+    @ManyToMany
+    @JoinTable(
+        name = "Movie_Genre",
+        joinColumns = @JoinColumn(name = "genre_id"),
+        inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private Set<Movie> movies = new HashSet<>();
 
     // Getter und Setter
-    public Long getId() {
+    public int getId() {
         return id;
     }
-    public void setId(Long id) {
+
+    public void setId(int id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-    public List<Movie> getMovies() {
+
+    public Set<Movie> getMovies() {
         return movies;
     }
-    public void setMovies(List<Movie> movies) {
+
+    public void setMovies(Set<Movie> movies) {
         this.movies = movies;
+    }
+
+    @Override
+    public String toString() {
+        return "Genre{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
