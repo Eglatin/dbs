@@ -1,127 +1,85 @@
-package de.hsh.dbs2.imdb;
+package de.hsh.dbs2.imdb.entities;
 
-import de.hsh.dbs2.imdb.entities.*; // Importiert alle Entitätsklassen, die die verschiedenen Tabellen in der Datenbank repräsentieren.
-import jakarta.persistence.EntityManager; // Ermöglicht den Zugriff auf die Datenbank, um CRUD-Operationen auszuführen.
-import jakarta.persistence.EntityManagerFactory; // Verwaltet den Lebenszyklus von EntityManager-Instanzen.
-import jakarta.persistence.Persistence; // Stellt die Verbindung zwischen dem Code und der persistence.xml her.
-import java.util.List; // Wird benötigt, um die Abfrageergebnisse in Listen zu speichern.
+import jakarta.persistence.*; // Importiert JPA-Annotationen für die Entitätsdefinition.
 
-public class TablePrinter {
+@Entity // Kennzeichnet diese Klasse als JPA-Entität, die mit einer Datenbanktabelle verknüpft ist.
+@Table(name = "CinemaMovie") 
+// Legt den Tabellennamen in der Datenbank explizit auf "CinemaMovie" fest.
+public class CinemaMovie {
 
-    public static void main(String[] args) {
-        EntityManagerFactory emf = null; // EntityManagerFactory verwaltet EntityManager und die Verbindung zur Datenbank.
+    @Id // Kennzeichnet das Feld `id` als Primärschlüssel der Tabelle.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // Gibt an, dass die ID automatisch von der Datenbank generiert wird, z. B. durch AUTO_INCREMENT.
+    private Long id;
 
-        try {
-            // Initialisiert die EntityManagerFactory mit der in der persistence.xml definierten "persistence-unit".
-            // Der Name "movie" muss mit der Definition in der persistence.xml übereinstimmen.
-            emf = Persistence.createEntityManagerFactory("movie");
-            
-            // Erstellt einen EntityManager, der für die Abfragen in der Datenbank verwendet wird.
-            EntityManager em = emf.createEntityManager();
+    @Column(nullable = false) 
+    // Definiert, dass das Feld `name` in der Datenbank nicht null sein darf.
+    private String name;
 
-            System.out.println("Tabelleninhalte:");
+    @Column(nullable = false)
+    // Definiert, dass das Feld `ticketsSold` in der Datenbank nicht null sein darf.
+    private int ticketsSold;
 
-            // Ruft alle Daten aus der Tabelle "Movie" ab und gibt sie aus.
-            printMovies(em);
+    @ManyToOne // Definiert eine viele-zu-eins-Beziehung zwischen `CinemaMovie` und `Series`.
+    @JoinColumn(name = "series_id") 
+    // Gibt an, dass die Spalte `series_id` in der Tabelle "CinemaMovie" ein Fremdschlüssel ist, der auf `Series` verweist.
+    private Series series;
 
-            // Ruft alle Daten aus der Tabelle "Genre" ab und gibt sie aus.
-            printGenres(em);
+    // =====================
+    // Getter und Setter
+    // =====================
 
-            // Ruft alle Daten aus der Tabelle "Person" ab und gibt sie aus.
-            printPersons(em);
-
-            // Ruft alle Daten aus der Tabelle "MovieCharacter" ab und gibt sie aus.
-            printMovieCharacters(em);
-
-            // Ruft alle Daten aus der Tabelle "Series" ab und gibt sie aus.
-            printSeries(em);
-
-            // Ruft alle Daten aus der Tabelle "CinemaMovie" ab und gibt sie aus.
-            printCinemaMovies(em);
-
-            // Schließt den EntityManager, nachdem alle Abfragen durchgeführt wurden.
-            em.close();
-        } catch (Exception e) {
-            // Fängt mögliche Fehler ab und gibt eine Fehlermeldung aus.
-            System.err.println("Fehler beim Lesen der Tabellen:");
-            e.printStackTrace(); // Gibt den Fehler-Stacktrace zur besseren Diagnose aus.
-        } finally {
-            // Stellt sicher, dass die EntityManagerFactory geschlossen wird, um Ressourcenlecks zu vermeiden.
-            if (emf != null) {
-                emf.close();
-            }
-        }
+    // Gibt die ID des CinemaMovies zurück.
+    public Long getId() {
+        return id;
     }
 
-    // Diese Methode ruft alle Filme aus der Tabelle "Movie" ab und gibt sie auf der Konsole aus.
-    private static void printMovies(EntityManager em) {
-        // Führt eine JPQL-Abfrage aus, um alle Einträge in der Tabelle "Movie" zu laden.
-        List<Movie> movies = em.createQuery("SELECT m FROM Movie m", Movie.class).getResultList();
-        System.out.println("Movies:");
-        // Iteriert durch die Liste der Filme und gibt jeden Film aus.
-        for (Movie movie : movies) {
-            System.out.println(movie); // Nutzt die toString-Methode der Entität Movie.
-        }
-        System.out.println(); // Fügt eine Leerzeile zur besseren Lesbarkeit ein.
+    // Setzt die ID des CinemaMovies. In der Regel wird dies nicht manuell genutzt, da die ID automatisch generiert wird.
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    // Diese Methode ruft alle Genres aus der Tabelle "Genre" ab und gibt sie auf der Konsole aus.
-    private static void printGenres(EntityManager em) {
-        // Führt eine JPQL-Abfrage aus, um alle Einträge in der Tabelle "Genre" zu laden.
-        List<Genre> genres = em.createQuery("SELECT g FROM Genre g", Genre.class).getResultList();
-        System.out.println("Genres:");
-        // Iteriert durch die Liste der Genres und gibt jedes Genre aus.
-        for (Genre genre : genres) {
-            System.out.println(genre); // Nutzt die toString-Methode der Entität Genre.
-        }
-        System.out.println(); // Fügt eine Leerzeile zur besseren Lesbarkeit ein.
+    // Gibt den Namen des CinemaMovies zurück.
+    public String getName() {
+        return name;
     }
 
-    // Diese Methode ruft alle Personen aus der Tabelle "Person" ab und gibt sie auf der Konsole aus.
-    private static void printPersons(EntityManager em) {
-        // Führt eine JPQL-Abfrage aus, um alle Einträge in der Tabelle "Person" zu laden.
-        List<Person> persons = em.createQuery("SELECT p FROM Person p", Person.class).getResultList();
-        System.out.println("Persons:");
-        // Iteriert durch die Liste der Personen und gibt jede Person aus.
-        for (Person person : persons) {
-            System.out.println(person); // Nutzt die toString-Methode der Entität Person.
-        }
-        System.out.println(); // Fügt eine Leerzeile zur besseren Lesbarkeit ein.
+    // Setzt den Namen des CinemaMovies.
+    public void setName(String name) {
+        this.name = name;
     }
 
-    // Diese Methode ruft alle Filmcharaktere aus der Tabelle "MovieCharacter" ab und gibt sie aus.
-    private static void printMovieCharacters(EntityManager em) {
-        // Führt eine JPQL-Abfrage aus, um alle Einträge in der Tabelle "MovieCharacter" zu laden.
-        List<MovieCharacter> characters = em.createQuery("SELECT mc FROM MovieCharacter mc", MovieCharacter.class).getResultList();
-        System.out.println("Movie Characters:");
-        // Iteriert durch die Liste der Filmcharaktere und gibt jeden Charakter aus.
-        for (MovieCharacter character : characters) {
-            System.out.println(character); // Nutzt die toString-Methode der Entität MovieCharacter.
-        }
-        System.out.println(); // Fügt eine Leerzeile zur besseren Lesbarkeit ein.
+    // Gibt die Anzahl der verkauften Tickets zurück.
+    public int getTicketsSold() {
+        return ticketsSold;
     }
 
-    // Diese Methode ruft alle Serien aus der Tabelle "Series" ab und gibt sie auf der Konsole aus.
-    private static void printSeries(EntityManager em) {
-        // Führt eine JPQL-Abfrage aus, um alle Einträge in der Tabelle "Series" zu laden.
-        List<Series> seriesList = em.createQuery("SELECT s FROM Series s", Series.class).getResultList();
-        System.out.println("Series:");
-        // Iteriert durch die Liste der Serien und gibt jede Serie aus.
-        for (Series series : seriesList) {
-            System.out.println(series); // Nutzt die toString-Methode der Entität Series.
-        }
-        System.out.println(); // Fügt eine Leerzeile zur besseren Lesbarkeit ein.
+    // Setzt die Anzahl der verkauften Tickets.
+    public void setTicketsSold(int ticketsSold) {
+        this.ticketsSold = ticketsSold;
     }
 
-    // Diese Methode ruft alle Kinofilme aus der Tabelle "CinemaMovie" ab und gibt sie aus.
-    private static void printCinemaMovies(EntityManager em) {
-        // Führt eine JPQL-Abfrage aus, um alle Einträge in der Tabelle "CinemaMovie" zu laden.
-        List<CinemaMovie> cinemaMovies = em.createQuery("SELECT cm FROM CinemaMovie cm", CinemaMovie.class).getResultList();
-        System.out.println("Cinema Movies:");
-        // Iteriert durch die Liste der Kinofilme und gibt jeden Film aus.
-        for (CinemaMovie cinemaMovie : cinemaMovies) {
-            System.out.println(cinemaMovie); // Nutzt die toString-Methode der Entität CinemaMovie.
-        }
-        System.out.println(); // Fügt eine Leerzeile zur besseren Lesbarkeit ein.
+    // Gibt die verknüpfte Serie zurück.
+    public Series getSeries() {
+        return series;
+    }
+
+    // Verknüpft eine Serie mit diesem CinemaMovie.
+    public void setSeries(Series series) {
+        this.series = series;
+    }
+
+    // =====================
+    // `toString`-Methode
+    // =====================
+    @Override
+    public String toString() {
+        // Gibt eine lesbare Darstellung des CinemaMovies zurück, die für Debugging und Ausgabe genutzt wird.
+        return "CinemaMovie{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", ticketsSold=" + ticketsSold +
+                ", series=" + (series != null ? series.getTitle() : "null") +
+                '}';
     }
 }
